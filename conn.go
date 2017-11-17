@@ -23,7 +23,7 @@ func Serve(listener net.Listener, conf *SOCKSConf) {
 			conf.HandleError(err)
 			continue
 		}
-		go handleConn(conn, conf)
+		go HandleConn(conn, conf)
 	}
 }
 
@@ -35,7 +35,7 @@ func IsSOCKS(r io.Reader) bool {
 	return header[0] == 4 || header[0] == 5
 }
 
-func handleConn(conn net.Conn, conf *SOCKSConf) {
+func HandleConn(conn net.Conn, conf *SOCKSConf) {
 	var err error
 	buffer := make([]byte, 1)
 	if _, err = conn.Read(buffer); err != nil {
