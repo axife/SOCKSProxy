@@ -62,8 +62,10 @@ func (c *socks5Conn) handleUDPAssociate(request *socks5Request) (err error) {
 	if c.sendReplyWithError(request, err) {
 		return err
 	}
-	go io.Copy(c.localConn, remoteConn)
-	go io.Copy(remoteConn, c.localConn)
+	// go io.Copy(c.localConn, remoteConn)
+	// go io.Copy(remoteConn, c.localConn)
+	go copy(c.localConn, remoteConn)
+	go copy(remoteConn, c.localConn)
 	return
 }
 

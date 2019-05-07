@@ -1,7 +1,6 @@
 package proxy
 
 import (
-	"io"
 	"net"
 )
 
@@ -34,16 +33,18 @@ func (c *socks4Conn) handleConnect(host string) (err error) {
 	if err != nil {
 		return err
 	}
-	go io.Copy(c.localConn, remoteConn)
-	go io.Copy(remoteConn, c.localConn)
+	// go io.Copy(c.localConn, remoteConn)
+	// go io.Copy(remoteConn, c.localConn)
+	go copy(c.localConn, remoteConn)
+	go copy(remoteConn, c.localConn)
 	return
 }
 
 func (c *socks4Conn) sendReply(request *socks4Request, status byte) {
 	response := &socks4Response{
-		status:status,
-		port:  make([]byte, 2),
-		ip:    make([]byte, 4),
+		status: status,
+		port:   make([]byte, 2),
+		ip:     make([]byte, 4),
 	}
 	if request.IsSOCKS4A() {
 		response.port = request.port
