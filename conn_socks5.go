@@ -3,6 +3,7 @@ package proxy
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"net"
 	"syscall"
@@ -57,9 +58,13 @@ func (c *socks5Conn) handleConnect(request *socks5Request) (err error) {
 }
 
 func (c *socks5Conn) handleUDPAssociate(request *socks5Request) (err error) {
+
+	fmt.Printf("handleUDPAssociate %s\n", request.Address())
+
 	c.sendUDPReply(request)
 	remoteConn, err := c.conf.Dial("udp", request.Address())
 	if c.sendReplyWithError(request, err) {
+		fmt.Printf("handleUDPAssociate error %s\n", err.Error())
 		return err
 	}
 	// go io.Copy(c.localConn, remoteConn)

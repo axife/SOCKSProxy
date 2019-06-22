@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"crypto/tls"
+	"fmt"
 	"io"
 	"net"
 )
@@ -14,6 +15,9 @@ type SOCKSConf struct {
 }
 
 func Serve(listener net.Listener, conf *SOCKSConf) {
+
+	fmt.Printf("Serve %s\n", listener.Addr().String())
+
 	if conf.HandleError == nil {
 		conf.HandleError = func(_ error) {}
 	}
@@ -36,6 +40,9 @@ func IsSOCKS(r io.Reader) bool {
 }
 
 func HandleConn(conn net.Conn, conf *SOCKSConf) {
+
+	fmt.Printf("HandleConn %s\n", conn.RemoteAddr().String())
+
 	var err error
 	buffer := make([]byte, 1)
 	if _, err = conn.Read(buffer); err != nil {
